@@ -16,6 +16,18 @@
 
 This project develops a complete Business Intelligence solution analyzing **US Domestic Flight Operations for Q1 2024**. The solution transforms 30,000 raw flight records into an interactive three-page Power BI dashboard that benchmarks airline performance, identifies delay root causes, and supports operational decision-making.
 
+### Delay definitions used in this report
+
+Two definitions of "delayed" appear, so the numbers differ depending on the measure:
+
+| Measure | Definition | Q1 2024 value |
+|---|---|---|
+| **Delayed Flights / Delay Rate** (DAX measures 2 and 4) | Departure delay > 15 minutes (FAA standard), excluding cancellations | 5,724 flights (19.1%) |
+| **Operational Delay Rate** (dashboard visuals) | Share of flights that **arrived** late by any amount (arrival delay > 0) | 10,549 of 29,388 flights (36%) |
+| **Average Delay** (dashboard visuals) | Average arrival delay of late-arriving flights | 41.3 minutes |
+| **Total Delay Minutes** (dashboard KPI cards) | Sum of positive arrival delays | 435,609 minutes |
+| **Delay minutes by cause** (DAX measure 12) | Sum of the five cause columns (carrier, weather, NAS, security, late aircraft) | 406,557 minutes |
+
 ---
 
 ## Section A: Dataset Selection & Understanding
@@ -318,7 +330,7 @@ SUMX(
 )
 ```
 ![](Screenshots/24_Measure12_TotalDelayMinutes.png)
-SUMX iterates row by row — handles nulls correctly across five columns. Dataset total: ~406,000–436,000 minutes.
+SUMX iterates row by row — handles nulls correctly across five columns. Dataset total: 406,557 minutes. (The 436K figure on the dashboard KPI cards is the sum of positive arrival delays; see *Delay definitions* above.)
 
 ### Level 3 - Advanced DAX
 
@@ -389,7 +401,7 @@ Three report pages following the narrative: **What happened? → Why did it happ
 
 **Visuals:**
 - 4 KPI Cards: Total Flights, Operational Delay Rate, Severe Delays, Average Delay
-- Bar Chart: Operational Delay Rate % by Carrier Name - Envoy Air and JetBlue worst; SkyWest best (~17%)
+- Bar Chart: Operational Delay Rate % by Carrier Name. On the full dataset, Republic Airways (YX, 21%) and Endeavor Air (9E, 25%) arrive late least often; Hawaiian Airlines (HA, 52%) and American Airlines (AA, 43%) most often. *(The screenshot above shows a filtered selection of 102 flights.)*
 - Donut Chart: Total Flights by Delay Category - 61.76% on time/early; 5.88% severe delay
 - Line Chart: Daily Delay Rate trend across January, February, March 2024
 - Slicers: origin_state, dest_city, Code (carrier)
@@ -405,14 +417,14 @@ Three report pages following the narrative: **What happened? → Why did it happ
 **Purpose:** Root cause analysis - moving from "what happened" to "why it happened."
 
 **Visuals:**
-- 4 KPI Cards: Delayed Flights (11K), Total Delay Minutes (436K), Avg Departure Delay (11.24 min), Delay Rate % (0.36)
+- 4 KPI Cards: Delayed Flights (11K, any late arrival), Total Delay Minutes (436K, sum of arrival delays), Avg Departure Delay (11.24 min), Delay Rate % (0.36, operational definition)
 - Horizontal Bar Chart: Delay Minutes by Cause - Late Aircraft leads at ~160K, then Carrier (~130K), NAS (~83K), Weather (~30K)
 - Pie Chart: Total Flights by Delay Category - 63.93% ahead of schedule/on time
 - Multi-Line Chart: All 5 delay causes by month - Late Aircraft consistently dominant; all types dip in February
 - Bar Chart: Average Delay by Carrier Code - G4 (Allegiant) ~58 min; AA ~54 min; F9 ~53 min
 - Slicers: fl_date, DelayCategory, Code
 
-**Story:** Late Aircraft delay (cascading from earlier legs) is the dominant systemic root cause at 37% of all delay minutes — a structural scheduling problem, not a random event.
+**Story:** Late Aircraft delay (cascading from earlier legs) is the dominant systemic root cause at 39% of all cause-attributed delay minutes — a structural scheduling problem, not a random event.
 
 ---
 
@@ -430,7 +442,7 @@ Three report pages following the narrative: **What happened? → Why did it happ
 - Carrier Performance Table: Code, Total Flights, Delay Rate %, Avg Delay, Cancelled Flights, Diversions - sortable
 - Slicers: origin_city, dest_state
 
-**Story:** The carrier table reveals the key insight — DL (Delta) achieves 29% delay rate with 4,108 flights while AA reaches 43% with only 4,255 flights. A 14-point performance gap at comparable volume proves operational excellence is achievable at scale.
+**Story:** The carrier table reveals the key insight — DL (Delta) arrives late on 29% of its 4,108 flights while AA arrives late on 43% of 4,255. A 14-point gap at comparable volume proves operational excellence is achievable at scale.
 
 ---
 
@@ -438,7 +450,7 @@ Three report pages following the narrative: **What happened? → Why did it happ
 
 ### Insight 1 - Late Aircraft Delay is the Dominant Systemic Root Cause
 
-The Page 2 horizontal bar chart confirms Late Aircraft delay accounts for ~160,000 of ~436,000 total delay minutes (approximately 37%) - the single largest cause, exceeding Carrier Delay (~130K), NAS Delay (~83K), and Weather Delay (~30K). The monthly trend confirms this cause is consistently dominant across all three months.
+The Page 2 horizontal bar chart confirms Late Aircraft delay accounts for ~160,000 of the 406,557 delay minutes attributed to a cause (39%) - the single largest cause, exceeding Carrier Delay (~130K), NAS Delay (~83K), and Weather Delay (~30K). The monthly trend confirms this cause is consistently dominant across all three months.
 
 Late aircraft delay is a cascading effect - delays on early-day flights propagate through all subsequent legs on the same aircraft. This is carrier-controlled and therefore directly actionable.
 
@@ -446,7 +458,7 @@ Late aircraft delay is a cascading effect - delays on early-day flights propagat
 
 ### Insight 2 - A 14-Point Performance Gap Between AA and DL at Comparable Flight Volumes
 
-The Page 3 carrier performance table shows American Airlines (AA) operating 4,255 flights at a 43% delay rate and 54.32 minute average delay, while Delta Air Lines (DL) operates 4,108 flights —- a similar scale - at 29% delay rate and 38.83 minute average delay. Carrier Delay Rank and Delay Rate vs Overall confirm this gap.
+The Page 3 carrier performance table shows American Airlines (AA) operating 4,255 flights with 43% arriving late and a 54.32-minute average delay, while Delta Air Lines (DL) operates 4,108 flights (a similar scale) with 29% arriving late and a 38.83-minute average delay. The gap holds on the stricter 15-minute standard: 25.5% of AA flights arrive more than 15 minutes late, against 14.1% for DL. Carrier Delay Rank and Delay Rate vs Overall confirm this gap.
 
 This 14-point performance difference at comparable volumes proves scale alone does not determine reliability. DL's operational processes achieve materially better performance.
 
