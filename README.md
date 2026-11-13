@@ -400,10 +400,10 @@ Three report pages following the narrative: **What happened? → Why did it happ
 **Purpose:** High-level executive summary - management understands headline performance within seconds.
 
 **Visuals:**
-- 4 KPI Cards: Total Flights, Operational Delay Rate, Severe Delays, Average Delay
-- Bar Chart: Operational Delay Rate % by Carrier Name. On the full dataset, Republic Airways (YX, 21%) and Endeavor Air (9E, 25%) arrive late least often; Hawaiian Airlines (HA, 52%) and American Airlines (AA, 43%) most often. *(The screenshot above shows a filtered selection of 102 flights.)*
-- Donut Chart: Total Flights by Delay Category - 61.76% on time/early; 5.88% severe delay
-- Line Chart: Daily Delay Rate trend across January, February, March 2024
+- 4 KPI Cards: Total Flights (29K), Operational Delay Rate (0.36), Severe Delays (2K), Average Delay (41.29 min)
+- Bar Chart: Operational Delay Rate % by Carrier Name. Republic Airways (YX, 21%) and Endeavor Air (9E, 25%) arrive late least often; Hawaiian Airlines (HA, 52%) and American Airlines (AA, 43%) most often.
+- Donut Chart: Total Flights by Delay Category - 63.93% ahead of schedule or on time; 6.66% severe delay
+- Line Chart: Daily Delay Rate trend across January, February, March 2024 - the rate peaks above 60% on 15–16 January
 - Slicers: origin_state, dest_city, Code (carrier)
 
 **Story:** The carrier bar chart immediately reveals dramatic performance variation. The donut confirms the majority of flights operate on time. The daily trend shows episodic rather than constant delay problems.
